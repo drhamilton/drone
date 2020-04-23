@@ -4,17 +4,13 @@ name: en
 
 steps:
   - name: greeting
-    image: alpine
+    image: node
     commands:
-      - echo hello world
+      - npm i
+      - npm start
 
----
-kind: pipeline
-type: docker
-name: fr
-
-steps:
-  - name: greeting
-    image: alpine
-    commands:
-      - echo bonjour monde
+trigger:
+  branch:
+    - master
+  event:
+    - push

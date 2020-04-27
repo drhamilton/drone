@@ -9,9 +9,6 @@ name: test_build
 steps:
   - name: test
     image: node
-    environment:
-      REACT_APP_ENV: test
-      REACT_APP_PORT: 9000
     commands:
       - yarn
       - yarn test

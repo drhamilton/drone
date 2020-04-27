@@ -6,6 +6,8 @@ steps:
   - name: build
     image: node
     commands:
+      - ls
+      - yarn
       - yarn build
   - name: upload
     image: plugins/s3

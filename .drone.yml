@@ -1,7 +1,3 @@
-########################
-#    Test and Build    #
-########################
-
 kind: pipeline
 type: docker
 name: test_build
@@ -21,11 +17,8 @@ trigger:
     - push
 
 ---
-########################
-# Deploy to Production #
-########################
-
 kind: pipeline
+type: docker
 name: deploy
 
 depends_on:

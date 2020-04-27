@@ -15,6 +15,7 @@ steps:
     environment:
       REACT_APP_ENV: test
       REACT_APP_PORT: 9000
+      
   - name: build
     image: node
     commands:

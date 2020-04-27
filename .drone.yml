@@ -10,13 +10,13 @@ steps:
   - name: test
     image: node
     commands:
-      - yarn
-      - yarn test
+    - yarn
+    - yarn test
   - name: build
     image: node
     commands:
-      - yarn
-      - yarn build
+    - yarn
+    - yarn build
 trigger:
   branch:
     - master

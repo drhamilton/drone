@@ -1,26 +1,56 @@
+########################
+#    Test and Build    #
+########################
+
 kind: pipeline
 type: docker
-name: en
+name: test_build
 
 steps:
+  - name: test
+    image: node
+    commands:
+      - yarn
+      - yarn test
+    environment:
+      REACT_APP_ENV: test
+      REACT_APP_PORT: 9000
   - name: build
     image: node
     commands:
-      - ls
       - yarn
       - yarn build
-  - name: upload
-    image: plugins/s3
-    settings:
-      bucket: dillon-drone-app
-      access_key:
-        from_secret: aws_access_key_id
-      secret_key:
-        from_secret: aws_secret_access_key
-      source: build/**/*
-      target: .
 trigger:
   branch:
     - master
   event:
     - push
+
+---
+########################
+# Deploy to Production #
+########################
+
+kind: pipeline
+name: deploy
+
+depends_on:
+  # Must run after the first pipeline
+  - test_build
+
+trigger:
+  status:
+    # Only runs if the first pipeline was fully successful
+    - success
+
+steps: 
+  - name: upload
+      image: plugins/s3
+      settings:
+        bucket: dillon-drone-app
+        access_key:
+          from_secret: aws_access_key_id
+        secret_key:
+          from_secret: aws_secret_access_key
+        source: build/**/*
+        target: .

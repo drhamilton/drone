@@ -1,43 +1,25 @@
 kind: pipeline
 type: docker
-name: test_build
+name: en
 
 steps:
-  - name: test
+  - name: build
     image: node
     commands:
-    - yarn
-    - yarn test
-    - yarn build
-
+      - yarn
+      - yarn build
+  - name: upload
+    image: plugins/s3
+    settings:
+      bucket: dillon-drone-app
+      access_key:
+        from_secret: aws_access_key_id
+      secret_key:
+        from_secret: aws_secret_access_key
+      source: build/**/*
+      target: .
 trigger:
   branch:
     - master
   event:
     - push
-
----
-kind: pipeline
-type: docker
-name: deploy
-
-depends_on:
-  # Must run after the first pipeline
-  - test_build
-
-trigger:
-  status:
-    # Only runs if the first pipeline was fully successful
-    - success
-
-steps: 
-  - name: upload
-      image: plugins/s3
-      settings:
-        bucket: dillon-drone-app
-        access_key:
-          from_secret: aws_access_key_id
-        secret_key:
-          from_secret: aws_secret_access_key
-        source: build/**/*
-        target: .
